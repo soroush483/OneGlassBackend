@@ -1,4 +1,5 @@
 using OneGlassApi.Interfaces;
+using OneGlassApi.Options;
 using OneGlassApi.Repositories;
 using OneGlassApi.Services;
 
@@ -14,6 +15,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(p => p.AddPolicy("corsapp", builder => {
     builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
 }));
+// Get ConncetionString From appsetting
+builder.Services.Configure<DatabaseOption>(
+    builder.Configuration.GetSection("Database"));
+// Add Dependency injection
 builder.Services.AddTransient<IWeatherService, WeatherService>();
 builder.Services.AddTransient<ISalesForecast, SalesForecast>();
 builder.Services.AddTransient<IAlertService, AlertService>();
