@@ -1,50 +1,49 @@
-﻿using Npgsql;
+﻿using Microsoft.Extensions.Options;
+using Npgsql;
 using OneGlassApi.Interfaces;
 using OneGlassApi.Models;
+using OneGlassApi.Options;
 
 namespace OneGlassApi.Repositories
 {
     public class SalesForecast : ISalesForecast
     {
         private readonly ILogger<SalesForecast> _logger;
-        private static string Host = "voids-jobs.c2wwnfcaisej.eu-central-1.rds.amazonaws.com";
-        private static string User = "postgres_ro";
-        private static string DBname = "postgres";
-        private static string Password = "0123456789";
-        private static string Port = "5432";
+        private readonly DatabaseOption _databaseOption;
 
-        public SalesForecast(ILogger<SalesForecast> logger)
+        public SalesForecast(ILogger<SalesForecast> logger, IOptions<DatabaseOption> databaseOption)
         {
-            _logger= logger;
+            _logger = logger;
+            _databaseOption = databaseOption.Value;
         }
         public List<OneGlassSale> GetSalesForecast(string location, string startDate, string endDate)
         {
-            var results = new List<OneGlassSale>();
-            // Build connection string using parameters from portal
-            string connString =
-                String.Format(
-                    "Server={0}; User Id={1}; Database={2}; Port={3}; Password={4};SSLMode=Prefer",
-                    Host,
-                    User,
-                    DBname,
-                    Port,
-                    Password);
-            using var conn = new NpgsqlConnection(connString);
-            conn.Open();
-            using var command = new NpgsqlCommand($"SELECT * FROM oneglass.forecasts WHERE location = '{location}' AND date BETWEEN '{startDate}' AND '{endDate}'", conn);
-
-            var reader = command.ExecuteReader();
-            while (reader.Read())
+            try
             {
-                results.Add(new OneGlassSale
+                var results = new List<OneGlassSale>();
+                using var conn = new NpgsqlConnection(_databaseOption.ConnectionString);
+                conn.Open();
+                using var command = new NpgsqlCommand($"SELECT * FROM oneglass.forecasts WHERE location = '{location}' AND date BETWEEN '{startDate}' AND '{endDate}'", conn);
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
                 {
-                    saleDate = reader.GetDateTime(0),
-                    location = reader.GetString(1),
-                    forecastedSalesQuantity = reader.GetDouble(2)
-                });
+                    results.Add(new OneGlassSale
+                    {
+                        saleDate = reader.GetDateTime(0),
+                        location = reader.GetString(1),
+                        forecastedSalesQuantity = reader.GetDouble(2)
+                    });
+                }
+                reader.Close();
+                return results;
             }
-            reader.Close();
-            return results;
+            catch (Exception e)
+            {
+                _logger.LogError("Query to database failed with exeption {exeption}", e.ToString());
+                throw;
+            }
+
         }
     }
 }
