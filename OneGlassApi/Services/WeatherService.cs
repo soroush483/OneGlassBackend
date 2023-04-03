@@ -24,7 +24,7 @@ namespace OneGlassApi.Services
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 //GET Method
-                HttpResponseMessage response = await client.GetAsync($"VisualCrossingWebServices/rest/services/timeline/{location}/{startDate}/{endDate}?unitGroup=metric&key=3WWEVYKLNRDJ4DHHK7ASL5XFF");
+                HttpResponseMessage response = await client.GetAsync($"VisualCrossingWebServices/rest/services/timeline/{location}/{startDate}/{endDate}?unitGroup=metric&key=4U5RLT74UKXB5A89GPPZT8YCY");
                 if (response.IsSuccessStatusCode)
                 {
                     var weatherForecast = await response.Content.ReadAsAsync<Weather>();
