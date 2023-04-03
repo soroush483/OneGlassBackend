@@ -50,12 +50,12 @@ namespace OneGlassApi.Services
             //leave the last two days of requested interval open because we can not verify thier sales for the next coming 3 days due to lack of data
             closedDays.Add(new OneGlassCloseDays { location = oneGlassSales[oneGlassSales.Count - 2].location, saleDate = oneGlassSales[oneGlassSales.Count - 2].saleDate, forecastedSalesQuantity = oneGlassSales[oneGlassSales.Count - 2].forecastedSalesQuantity, isClosed = false, reason = "" });
             closedDays.Add(new OneGlassCloseDays { location = oneGlassSales[oneGlassSales.Count - 1].location, saleDate = oneGlassSales[oneGlassSales.Count - 1].saleDate, forecastedSalesQuantity = oneGlassSales[oneGlassSales.Count - 1].forecastedSalesQuantity, isClosed = false, reason = "" });
-            
+
             return closedDays;
         }
 
         //Close by low temprature
-        private List<OneGlassCloseDays> CloseByBadWeather(List<OneGlassWeather> oneGlassWeathers, List<OneGlassSale> oneGlassSales, List<OneGlassCloseDays> closedDays )
+        private List<OneGlassCloseDays> CloseByBadWeather(List<OneGlassWeather> oneGlassWeathers, List<OneGlassSale> oneGlassSales, List<OneGlassCloseDays> closedDays)
         {
             for (int i = 0; i < oneGlassSales.Count - 2; i++)
             {
@@ -65,7 +65,7 @@ namespace OneGlassApi.Services
                     {
                         if (i >= 3 && !(closedDays[closedDays.Count - 1].isClosed && closedDays[closedDays.Count - 2].isClosed && closedDays[closedDays.Count - 3].isClosed))
                         {
-                            if (!(closedDays.Exists(x => x.saleDate == oneGlassSales[i].saleDate))) 
+                            if (!(closedDays.Exists(x => x.saleDate == oneGlassSales[i].saleDate)))
                             {
                                 closedDays.Add(new OneGlassCloseDays { location = oneGlassSales[i].location, saleDate = oneGlassSales[i].saleDate, forecastedSalesQuantity = oneGlassSales[i].forecastedSalesQuantity, isClosed = true, temperature = oneGlassWeathers[i].temperature, reason = "BadWeather" });
                             }
