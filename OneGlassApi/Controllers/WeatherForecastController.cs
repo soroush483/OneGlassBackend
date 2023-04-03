@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OneGlassApi.Interfaces;
 using OneGlassApi.Models;
@@ -16,8 +17,7 @@ namespace OneGlassApi.Controllers
             _logger = logger;
             _weatherService = weatherService;
         }
-
-        [HttpGet(Name = "GetWeatherForecast")]
+        [HttpGet(Name = "GetWeatherForecast"),Authorize]
         public async Task<List<OneGlassWeather>> Get(string location, string startDate, string endDate)
         {
             return await _weatherService.GetWeatherFromVisualcrossing(location, startDate, endDate);
