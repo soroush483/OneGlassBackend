@@ -17,9 +17,18 @@ namespace OneGlassApi.Controllers
         }
 
         [HttpGet(Name = "GetSalesForecast")]
-        public List<OneGlassSale> Get(string location, string startDate, string endDate)
+        public IActionResult Get(string location, string startDate, string endDate)
         {
-            return _salesForecast.GetSalesForecast(location, startDate, endDate);
+            try
+            {
+                var result = _salesForecast.GetSalesForecast(location, startDate, endDate);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Could not get salesforecast with exception {exception}", ex);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

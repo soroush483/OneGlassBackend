@@ -17,10 +17,20 @@ namespace OneGlassApi.Controllers
             _logger = logger;
             _weatherService = weatherService;
         }
-        [HttpGet(Name = "GetWeatherForecast"),Authorize]
-        public async Task<List<OneGlassWeather>> Get(string location, string startDate, string endDate)
+
+        [HttpGet(Name = "GetWeatherForecast"), Authorize]
+        public async Task<IActionResult> Get(string location, string startDate, string endDate)
         {
-            return await _weatherService.GetWeatherFromVisualcrossing(location, startDate, endDate);
+            try
+            {
+                var result = await _weatherService.GetWeatherFromVisualcrossing(location, startDate, endDate);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Could not get weather forecast beacuase exception {exception}", ex);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
