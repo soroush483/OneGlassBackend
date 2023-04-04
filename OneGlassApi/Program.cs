@@ -16,7 +16,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "JWTToken_Auth_API",
+        Title = "OneGlass_API",
         Version = "v1"
     });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
@@ -70,6 +70,7 @@ builder.Services.Configure<DatabaseOption>(
 builder.Services.AddTransient<IWeatherService, WeatherService>();
 builder.Services.AddTransient<ISalesForecast, SalesForecast>();
 builder.Services.AddTransient<IAlertService, AlertService>();
+builder.Services.AddTransient<ILoginService, LoginService>();
 
 var app = builder.Build();
 
