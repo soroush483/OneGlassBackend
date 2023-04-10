@@ -8,9 +8,10 @@ namespace OneGlassApi.Controllers
     [Route("[controller]")]
     public class SaleForecastController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<SaleForecastController> _logger;
         private readonly ISalesForecast _salesForecast;
-        public SaleForecastController(ILogger<WeatherForecastController> logger, ISalesForecast salesForecast)
+
+        public SaleForecastController(ILogger<SaleForecastController> logger, ISalesForecast salesForecast)
         {
             _logger = logger;
             _salesForecast = salesForecast;
