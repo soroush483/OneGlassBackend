@@ -1,6 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using OneGlassApi.DTO;
 using OneGlassApi.Interfaces;
+using OneGlassApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -9,7 +10,7 @@ namespace OneGlassApi.Services
 {
     public class LoginService : ILoginService
     {
-        public string GenearteJwtToken(string username, string password)
+        public ApiCredentials GenearteJwtToken(string username, string password)
         {
             if (VerifyLoginCredential(username, password))
             {
@@ -22,10 +23,13 @@ namespace OneGlassApi.Services
                     expires: DateTime.Now.AddMinutes(10),
                     signingCredentials: signinCredentials
                 );
-                var token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+                var token = new ApiCredentials
+                {
+                    jWtToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken)
+                };
                 return token;
             }
-            return null;
+            return new ApiCredentials();
         }
 
         private bool VerifyLoginCredential(string username, string password)
