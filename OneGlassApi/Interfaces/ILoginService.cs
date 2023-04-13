@@ -1,7 +1,9 @@
-﻿namespace OneGlassApi.Interfaces
+﻿using OneGlassApi.Models;
+
+namespace OneGlassApi.Interfaces
 {
     public interface ILoginService
     {
-        string GenearteJwtToken(string username, string password);
+        ApiCredentials GenearteJwtToken(string username, string password);
     }
 }
